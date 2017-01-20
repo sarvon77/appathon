@@ -1,0 +1,22 @@
+{
+  "name": "appathon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^16.1.0",
+    "hapi-swagger": "^7.6.0",
+    "inert": "^4.1.0",
+    "joi": "^10.2.0",
+    "mysql": "^2.12.0",
+    "requestify": "^0.2.5",
+    "uuid": "^3.0.1",
+    "vision": "^4.1.1"
+  }
+}
