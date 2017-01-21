@@ -10,8 +10,8 @@ const Pack = require('./package');
  
 const server = new Hapi.Server();
 server.connection({
-        host: 'localhost',
-        port: 3000,
+        host: 0.0.0.0,
+        port: process.env.PORT || 3000,
 		 routes: { cors: true } 
     });
  
