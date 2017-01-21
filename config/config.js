@@ -7,10 +7,10 @@ var config = {
 	  }
 	},
 	"db": {
-	  host     : 'localhost',
-	  user     : 'root',
-	  password : '',
-	  database : 'appathon'
+	  host     : 'sql6.freemysqlhosting.net',
+	  user     : 'sql6154934',
+	  password : 'IGuRqBJvyV',
+	  database : 'sql6154934'
 	}
 };
 
