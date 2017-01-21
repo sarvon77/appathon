@@ -10,7 +10,7 @@ const Pack = require('./package');
  
 const server = new Hapi.Server();
 server.connection({
-        host: "appathon-cts.herokuapp.com",
+        host: "174.129.199.201",
         port: process.env.PORT || 3000,
 		 routes: { cors: true } 
     });
