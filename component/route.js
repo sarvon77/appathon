@@ -115,6 +115,21 @@ var route = [
 		}
 	},
 	{
+		method: 'get',
+		path:'/top-poll/{limit}',
+		config: {		
+			handler:polling.toppoll,
+			description: 'top polling',
+			notes: 'polling',
+			tags: ['api'],
+			validate: {
+				params: {
+					limit:Joi.number().required()
+				}
+			}
+		}
+	},
+	{
 		method: 'POST',
 		path:'/create-poll',
 		config: {		
