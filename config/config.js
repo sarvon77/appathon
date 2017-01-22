@@ -7,14 +7,14 @@ var config = {
 	  }
 	},
 	"db": {
-	  //host     : 'sql6.freemysqlhosting.net',
-	  host     : 'localhost',
-	  //user     : 'sql6154934',
-	  user     : 'root',
-	  //password : 'IGuRqBJvyV',
-	  password : '',
-	  //database : 'sql6154934'
-	  database : 'appathon'
+	  host     : 'sql6.freemysqlhosting.net',
+	  //host     : 'localhost',
+	  user     : 'sql6154934',
+	  //user     : 'root',
+	  password : 'IGuRqBJvyV',
+	  //password : '',
+	  database : 'sql6154934'
+	  //database : 'appathon'
 	}
 };
 /*
