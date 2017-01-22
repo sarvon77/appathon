@@ -69,11 +69,29 @@ pollingModel.ongoinglist = function(cb) {
 		}
 	});
 }
-pollingModel.list = function(req,cb) {
-	var querystr = "SELECT * FROM pollbox where isApproved = 'true'";
-	if(req.user == "admin") {
-		querystr = "SELECT * FROM pollbox";
+
+
+pollingModel.listByuser = function(req,cb) {
+	pollingModel.list(req,function(err,succ) {
+		if(err) {
+			cb(err)
+		} else {
+			cb(null,succ)
+		}
+	},true);
+	
+}
+pollingModel.list = function(req,cb,listByuser) {
+	var querystr = "";
+	if(!listByuser) {
+		querystr = "SELECT * FROM pollbox where isApproved = 'true'";
+		if(req.user == "admin") {
+			querystr = "SELECT * FROM pollbox";
+		}
+	} else {
+		querystr = "SELECT * FROM pollbox where generatorId = '" + req.userId + "'";
 	}
+	
 	db.query(querystr, function (error, results, fields) {
 		if(!error) {
 			var responseObjFull = [];

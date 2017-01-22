@@ -20,6 +20,15 @@ pollingController.list = function(req,reply){
 	})
 }
 
+pollingController.listByuser = function(req,reply){
+	pollingModel.listByuser(req.params,function(err,succ) {
+		if(err) {
+			return reply({status:400,"message":"failed"});
+		} else {
+			return reply({status:200,"data":succ})
+		}
+	})
+}
 pollingController.ongoinglist = function(req,reply){
 	pollingModel.ongoinglist(function(err,succ) {
 		if(err) {
