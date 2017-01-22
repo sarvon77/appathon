@@ -175,16 +175,29 @@ pollingModel.pollSubmit = function(request,cb) {
 
 pollingModel.updatePoll = function(request,cb) {
 	var pollId = request.pollingId,
-		status = request.status;
-	var queryStr = "update pollbox set isApproved='"+status+"' where pollingId='"+pollId+"'";
-	db.query(queryStr, function (error, results, fields) {
-		//console.log(error,queryStr)
-		if(!error) {
-			cb(null,"success")
-		} else {
-			cb(error)
+		status = request.status,
+		isStarted = request.isStarted,
+		querStr = "";
+		if(status != undefined) {
+			querStr = "isApproved='"+status+"' ";
 		}
-	})
+		if(isStarted != undefined) {
+			querStr = "isStarted='"+isStarted+"' ";
+		}
+		if(querStr != "") {
+			var queryStr = "update pollbox set " + querStr + " where pollingId='"+pollId+"'";
+			db.query(queryStr, function (error, results, fields) {
+				//console.log(error,queryStr)
+				if(!error) {
+					cb(null,"success")
+				} else {
+					cb(error)
+				}
+			})
+		} else {
+			cb(error);
+		}
+	
 }
 pollingModel.toppoll = function(request,cb) {
 	var querystr = "SELECT *,COUNT(*) AS cnt FROM polledbox GROUP BY pollId ORDER BY cnt DESC LIMIT " + (request.limit || 5);

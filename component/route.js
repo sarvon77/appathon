@@ -124,8 +124,9 @@ var route = [
 			tags: ['api'],
 			validate: {
 				payload: {
-					status:Joi.boolean().required(),
+					status:Joi.boolean().optional(),
 					pollingId:Joi.string().required(),
+					isStarted:Joi.boolean().optional()
 				}
 			}
 		}
