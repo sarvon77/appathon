@@ -10,7 +10,7 @@ pollingModel.comments = function(req,cb){
 		userName = req.userName,
 		date = moment().format("YYYY-MM-DD hh:mm:ss"),
 		rating = req.rating,
-		comment = req.comment,
+		comment = req.comment ? req.comment : "",
 		pollingId = req.pollingId;
 	var insertQuery = "insert into comments(userId,userName,date,rating,comment,pollingId) values('"+ userId +"','"+ userName +"','"+ date +"','"+ rating +"','"+ comment +"','"+ pollingId +"')";
 	db.query(insertQuery, function (error, results, fields) {

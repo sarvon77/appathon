@@ -89,7 +89,7 @@ var route = [
 					userId:Joi.string().required(),
 					userName:Joi.string().required(),
 					rating:Joi.number().required(),
-					comment:Joi.string().required(),
+					comment:Joi.string().optional(),
 				}
 			}
 		}
