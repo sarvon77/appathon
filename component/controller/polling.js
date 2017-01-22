@@ -20,6 +20,9 @@ pollingController.list = function(req,reply){
 	})
 }
 
+pollingController.getImage = function(req,reply) {
+	reply.file("images/"+req.params.imageName);
+}
 pollingController.imageData = function(req,reply) {
 	pollingModel.imageData(req.payload,function(err,succ) {
 		if(err) {

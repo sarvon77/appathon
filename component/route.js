@@ -200,6 +200,21 @@ var route = [
 				}
 			}
 		}
+	},	
+	{
+		method: 'get',
+		path:'/images/{imageName}',
+		config: {		
+			handler:polling.getImage,
+			description: 'get Image',
+			notes: 'images',
+			tags: ['api'],
+			validate: {
+				params: {
+					imageName:Joi.string().required()
+				}
+			}
+		}
 	},
 	{
 		method: 'POST',
