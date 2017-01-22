@@ -20,6 +20,15 @@ pollingController.list = function(req,reply){
 	})
 }
 
+pollingController.imageData = function(req,reply) {
+	pollingModel.imageData(req.payload,function(err,succ) {
+		if(err) {
+			return reply({status:400,"message":"failed"});
+		} else {
+			return reply({status:200,"data":succ})
+		}
+	})
+}
 pollingController.listByuser = function(req,reply){
 	pollingModel.listByuser(req.params,function(err,succ) {
 		if(err) {

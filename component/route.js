@@ -188,6 +188,21 @@ var route = [
 	},
 	{
 		method: 'POST',
+		path:'/convertImage',
+		config: {		
+			handler:polling.imageData,
+			description: 'top polling',
+			notes: 'polling',
+			tags: ['api'],
+			validate: {
+				payload: {
+					imageData:Joi.string().required()
+				}
+			}
+		}
+	},
+	{
+		method: 'POST',
 		path:'/create-poll',
 		config: {		
 			handler:polling.create,

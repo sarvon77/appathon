@@ -2,6 +2,10 @@ var db = require("./db.js");
 const uuidV1 = require('uuid/v1');
 const async = require('async');
 const moment = require('moment');
+var mkdirp = require('mkdirp');
+var fs = require('fs');
+var getDirName = require('path').dirname;
+var base64ToImage = require('base64-to-image');
 var pollingModel = {};
 
 pollingModel.comments = function(req,cb){
@@ -94,6 +98,14 @@ pollingModel.singlepoll = function(req,cb) {
 }
 
 
+pollingModel.imageData = function(req,cb) {
+	var base64Str = req.imageData;
+	var path ='images/';
+	var optionalObj = {'fileName': uuidV1(), 'type':'png'};
+	var imageInfo = base64ToImage(base64Str,path,optionalObj); ;
+	//console.log(optionalObj)
+	cb(null,path + optionalObj.fileName + "." + optionalObj.type)
+}
 pollingModel.list = function(req,cb,listByuser) {
 	var querystr = "";
 	if(listByuser == "single") {
