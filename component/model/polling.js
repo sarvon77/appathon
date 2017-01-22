@@ -24,7 +24,7 @@ pollingModel.comments = function(req,cb){
 
 
 pollingModel.ongoinglist = function(cb) {
-	var querystr = "SELECT * FROM pollbox WHERE startDate <= CURDATE() AND  endDate >= CURDATE()";
+	var querystr = "SELECT * FROM pollbox WHERE startDate <= CURDATE() AND  endDate >= CURDATE() and isApproved = 'true' and isStarted='true'";
 	db.query(querystr, function (error, results, fields) {
 		if(!error) {
 			var responseObjFull = [];

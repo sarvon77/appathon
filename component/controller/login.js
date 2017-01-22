@@ -11,14 +11,14 @@ loginController.registerUser = function(req,reply) {
 		if(err) {
 			return reply({"status":400,"message":err.msg});	
 		} else {
-			return reply({"status":200,"message":"Device registered successfully"})
+			return reply({"status":200,"message":"Device registered successfully","userData":succ})
 		}
 	})
 }
 loginController.loginUser = function(req,reply) {
-	console.log(req.payload)
+	//console.log(req.payload)
 	loginModel.loginUser(req.payload,function(err,userDetails) {
-		console.log(err , userDetails)
+		//console.log(err , userDetails)
 		if(err) {
 			return reply({"status":400,"message":err.msg});	
 		} else {

@@ -78,7 +78,7 @@ loginModule.addloginRecord = function(req,cb) {
 
 loginModule.loginUser = function(request,cb) {
 	var queryStr = "SELECT * from user where deviceId='" + request.deviceId + "'";
-	console.log(queryStr)
+	//console.log(queryStr)
 	db.query(queryStr, function (error, results, fields) {
 		if (error) {
 		  cb({msg:error})
@@ -115,13 +115,18 @@ loginModule.registerUser = function(request,cb) {
 				appId = request.appId,
 				os = request.os;			
 			var queryStr = "insert into user(userId,userName,emailId,userType,isAdmin,AccountId,deviceId,thumbnail,dob,nationality,sex,phoneNumber,appId,os) values('" + userId + "','" + userName +"','" + emailId + "','" + userType +"','" + isAdmin + "','" +AccountId +"','" + deviceId +"','" + thumbnail + "','" + dob +"','" + nationality + "','" + sex +"','" + phoneNumber + "','" + appId +"','"+os+"')";
-			db.query(queryStr, function (error, results) {	
-				console.log(queryStr,error, results)
+			db.query(queryStr, function (error, results,row) {	
+				//console.log(queryStr,error, results,row)
 	  
 				if(error) {
 					cb(error)
 				} else {
-					cb(null,"success")
+					var selQuery = "select * from user where Id = '" + results.insertId+ "'";
+					db.query(selQuery, function (error, results,row) {			
+
+					//console.log(error || results)					
+						cb(null,results[0] || "success")
+					});
 				}
 			})
 		 }
