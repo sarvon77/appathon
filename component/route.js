@@ -77,6 +77,21 @@ var route = [
 	},
 	{
 		method: 'get',
+		path:'/poll/{pollId}',
+		config: {		
+			handler:polling.singlepoll,
+			description: 'list polling',
+			notes: 'polling',
+			tags: ['api'],
+			validate: {
+				params: {
+					pollId:Joi.string().required()
+				}
+			}
+		}
+	},
+	{
+		method: 'get',
 		path:'/user-poll/{userId}',
 		config: {		
 			handler:polling.listByuser,

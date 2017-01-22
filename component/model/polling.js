@@ -78,20 +78,35 @@ pollingModel.listByuser = function(req,cb) {
 		} else {
 			cb(null,succ)
 		}
-	},true);
+	},"list");
 	
 }
+pollingModel.singlepoll = function(req,cb) {
+	//console.log(req)
+	pollingModel.list(req,function(err,succ) {
+		if(err || succ.length == 0) {
+			cb(true)
+		} else {
+			cb(null,succ[0] || {})
+		}
+	},"single");
+	
+}
+
+
 pollingModel.list = function(req,cb,listByuser) {
 	var querystr = "";
-	if(!listByuser) {
+	if(listByuser == "single") {
+		querystr = "SELECT * FROM pollbox where pollingId = '" + req.pollId + "'";
+	} else if(listByuser == "list"){
+		querystr = "SELECT * FROM pollbox where generatorId = '" + req.userId + "'";
+	} else {
 		querystr = "SELECT * FROM pollbox where isApproved = 'true'";
 		if(req.user == "admin") {
 			querystr = "SELECT * FROM pollbox";
 		}
-	} else {
-		querystr = "SELECT * FROM pollbox where generatorId = '" + req.userId + "'";
 	}
-	
+	//console.log(querystr)
 	db.query(querystr, function (error, results, fields) {
 		if(!error) {
 			var responseObjFull = [];
