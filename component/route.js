@@ -115,6 +115,22 @@ var route = [
 		}
 	},
 	{
+		method: 'put',
+		path:'/update-poll',
+		config: {		
+			handler:polling.updatePoll,
+			description: 'update polling',
+			notes: 'polling',
+			tags: ['api'],
+			validate: {
+				payload: {
+					status:Joi.boolean().required(),
+					pollingId:Joi.string().required(),
+				}
+			}
+		}
+	},
+	{
 		method: 'get',
 		path:'/top-poll/{limit}',
 		config: {		

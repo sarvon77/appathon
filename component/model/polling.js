@@ -48,7 +48,7 @@ pollingModel.list = function(req,cb) {
 								db.query(querystr, function (error, deviceIdRes, fields) {
 									responseObj.comments = deviceIdRes.length > 0?deviceIdRes:[];
 									responseObj.commentsCount = deviceIdRes.length;
-									var querystr = "SELECT COUNT(*) as count,id FROM polledbox WHERE pollId = '" + responseObj.pollingId + "' GROUP BY id";
+									var querystr = "SELECT COUNT(*) as count,id,name FROM polledbox WHERE pollId = '" + responseObj.pollingId + "' GROUP BY id";
 									db.query(querystr, function (error, resultsRes, fields) {
 										responseObj.results = resultsRes.length > 0?resultsRes:[];
 										responseObjFull.push(responseObj)
@@ -170,6 +170,22 @@ pollingModel.pollSubmit = function(request,cb) {
 		}
 	})
 }
+
+
+
+pollingModel.updatePoll = function(request,cb) {
+	var pollId = request.pollingId,
+		status = request.status;
+	var queryStr = "update pollbox set isApproved='"+status+"' where pollingId='"+pollId+"'";
+	db.query(queryStr, function (error, results, fields) {
+		//console.log(error,queryStr)
+		if(!error) {
+			cb(null,"success")
+		} else {
+			cb(error)
+		}
+	})
+}
 pollingModel.toppoll = function(request,cb) {
 	var querystr = "SELECT *,COUNT(*) AS cnt FROM polledbox GROUP BY pollId ORDER BY cnt DESC LIMIT " + (request.limit || 5);
 	db.query(querystr, function (error, results, fields) {
@@ -195,7 +211,7 @@ pollingModel.toppoll = function(request,cb) {
 									db.query(querystr, function (error, deviceIdRes, fields) {
 										responseObj.comments = deviceIdRes.length > 0?deviceIdRes:[];
 										responseObj.commentsCount = deviceIdRes.length;
-										var querystr = "SELECT COUNT(*) as count,id FROM polledbox WHERE pollId = '" + currentRes.pollId + "' GROUP BY id";
+										var querystr = "SELECT COUNT(*) as count,id,name FROM polledbox WHERE pollId = '" + currentRes.pollId + "' GROUP BY id";
 										db.query(querystr, function (error, resultsRes, fields) {
 											responseObj.results = resultsRes.length > 0?resultsRes:[];
 											responseObjFull.push(responseObj)

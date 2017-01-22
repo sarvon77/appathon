@@ -29,6 +29,16 @@ pollingController.toppoll = function(req,reply){
 	})
 }
 
+pollingController.updatePoll = function(req,reply){
+	pollingModel.updatePoll(req.payload,function(err,succ) {
+		if(err) {
+			return reply({status:400,"message":"failed"});
+		} else {
+			return reply({status:200,"data":"success"})
+		}
+	})
+}
+
 
 pollingController.pollSubmit = function(req,reply){
 	pollingModel.pollSubmit(req.payload,function(err,succ) {
