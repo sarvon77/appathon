@@ -76,6 +76,16 @@ var route = [
 		}
 	},
 	{
+		method: 'get',
+		path:'/ongoing-poll',
+		config: {		
+			handler:polling.ongoinglist,
+			description: 'list polling',
+			notes: 'polling',
+			tags: ['api']
+		}
+	},
+	{
 		method: 'post',
 		path:'/comments',
 		config: {		

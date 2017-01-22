@@ -22,6 +22,53 @@ pollingModel.comments = function(req,cb){
 	});
 }
 
+
+pollingModel.ongoinglist = function(cb) {
+	var querystr = "SELECT * FROM pollbox WHERE startDate <= CURDATE() AND  endDate >= CURDATE()";
+	db.query(querystr, function (error, results, fields) {
+		if(!error) {
+			var responseObjFull = [];
+			async.each(results,function(currentRes,asyncCb) {
+				var responseObj = currentRes;
+				responseObj.startDate = responseObj.startDate + " ";
+				responseObj.endDate = responseObj.endDate + " ";
+				var querystr = "SELECT * FROM polling where pollId = '" + responseObj.pollingId + "'";
+				db.query(querystr, function (error, pollingRes, fields) {
+					responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
+					var querystr = "SELECT * FROM category where pollId = '" + responseObj.pollingId + "'";
+					db.query(querystr, function (error, categoryRes, fields) {
+						responseObj.Category = categoryRes.length > 0?categoryRes:[];
+						var querystr = "SELECT * FROM answer where pollId = '" + responseObj.pollingId + "'";
+						db.query(querystr, function (error, answerRes, fields) {
+							responseObj.options = answerRes.length > 0?answerRes:[];
+							//var querystr = "SELECT * FROM user where deviceId = '" + responseObj.deviceId + "'";
+							//db.query(querystr, function (error, deviceIdRes, fields) {
+								//responseObj.user = deviceIdRes.length > 0?deviceIdRes:[];
+								var querystr = "SELECT * FROM comments where pollingId = '" + responseObj.pollingId + "'";
+								db.query(querystr, function (error, deviceIdRes, fields) {
+									responseObj.comments = deviceIdRes.length > 0?deviceIdRes:[];
+									responseObj.commentsCount = deviceIdRes.length;
+									var querystr = "SELECT COUNT(*) as count,id,name FROM polledbox WHERE pollId = '" + responseObj.pollingId + "' GROUP BY id";
+									db.query(querystr, function (error, resultsRes, fields) {
+										responseObj.results = resultsRes.length > 0?resultsRes:[];
+										responseObjFull.push(responseObj)
+										asyncCb();
+									});									
+								});
+								//responseObjFull.push(responseObj)
+								//asyncCb();
+							//});
+						});
+					});
+				})
+			},function(err,success) {
+				cb(null,responseObjFull)
+			})
+		} else {
+			cb(error)
+		}
+	});
+}
 pollingModel.list = function(req,cb) {
 	var querystr = "SELECT * FROM pollbox where isApproved = 'true'";
 	if(req.user == "admin") {
@@ -31,7 +78,9 @@ pollingModel.list = function(req,cb) {
 		if(!error) {
 			var responseObjFull = [];
 			async.each(results,function(currentRes,asyncCb) {
-				var responseObj = currentRes;
+				var responseObj = currentRes;				
+				responseObj.startDate = responseObj.startDate + " ";
+				responseObj.endDate = responseObj.endDate + " ";
 				var querystr = "SELECT * FROM polling where pollId = '" + responseObj.pollingId + "'";
 				db.query(querystr, function (error, pollingRes, fields) {
 					responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
