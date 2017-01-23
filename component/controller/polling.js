@@ -85,7 +85,7 @@ pollingController.updatePoll = function(req,reply){
 pollingController.pollSubmit = function(req,reply){
 	pollingModel.pollSubmit(req.payload,function(err,succ) {
 		if(!err) {
-			return reply({status:200,"message":"success"});
+			return reply({status:200,"message":"success","data":succ});
 		} else {
 			return reply({status:400,"message":"failed"})
 		}

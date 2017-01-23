@@ -258,7 +258,10 @@ pollingModel.pollSubmit = function(request,cb) {
 	db.query(queryStr, function (error, results, fields) {
 		//console.log(error,queryStr)
 		if(!error) {
-			cb(null,"success")
+			pollingModel.singlepoll({pollId:pollId},function(err,succ) {
+				cb(null,succ)
+			})
+			
 		} else {
 			cb(error)
 		}
