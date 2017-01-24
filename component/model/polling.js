@@ -136,9 +136,9 @@ pollingModel.list = function(req,cb,listByuser) {
 						var querystr = "SELECT * FROM answer where pollId = '" + responseObj.pollingId + "'";
 						db.query(querystr, function (error, answerRes, fields) {
 							responseObj.options = answerRes.length > 0?answerRes:[];
-							//var querystr = "SELECT * FROM user where deviceId = '" + responseObj.deviceId + "'";
-							//db.query(querystr, function (error, deviceIdRes, fields) {
-								//responseObj.user = deviceIdRes.length > 0?deviceIdRes:[];
+							var querystr = "SELECT * FROM user where deviceId = '" + responseObj.deviceId + "'";
+							db.query(querystr, function (error, deviceIdRes, fields) {
+								responseObj.user = deviceIdRes.length > 0?deviceIdRes:[];
 								var querystr = "SELECT * FROM comments where pollingId = '" + responseObj.pollingId + "'";
 								db.query(querystr, function (error, deviceIdRes, fields) {
 									responseObj.comments = deviceIdRes.length > 0?deviceIdRes:[];
@@ -162,7 +162,7 @@ pollingModel.list = function(req,cb,listByuser) {
 								});
 								//responseObjFull.push(responseObj)
 								//asyncCb();
-							//});
+							});
 						});
 					});
 				})
