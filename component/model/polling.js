@@ -107,6 +107,7 @@ pollingModel.imageData = function(req,cb) {
 	cb(null,path + optionalObj.fileName + "." + optionalObj.type)
 }
 pollingModel.list = function(req,cb,listByuser) {
+	console.log(req);
 	var querystr = "";
 	if(listByuser == "single") {
 		querystr = "SELECT * FROM pollbox where pollingId = '" + req.pollId + "'";
@@ -145,8 +146,18 @@ pollingModel.list = function(req,cb,listByuser) {
 									var querystr = "SELECT COUNT(*) as count,id,name FROM polledbox WHERE pollId = '" + responseObj.pollingId + "' GROUP BY id";
 									db.query(querystr, function (error, resultsRes, fields) {
 										responseObj.results = resultsRes.length > 0?resultsRes:[];
-										responseObjFull.push(responseObj)
-										asyncCb();
+										if(req.deviceId) {
+											var querystr = "SELECT * FROM polledbox WHERE pollId = '" + responseObj.pollingId + "' and deviceId='" + req.deviceId +"'";
+											db.query(querystr, function (error, votedRes, fields) {
+												responseObj.userVoted = votedRes.length > 0?true:false;
+												responseObjFull.push(responseObj)
+												asyncCb();
+											});
+										} else {
+											responseObj.userVoted = false;
+											responseObjFull.push(responseObj)
+											asyncCb();
+										}
 									});									
 								});
 								//responseObjFull.push(responseObj)

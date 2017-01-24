@@ -71,6 +71,9 @@ var route = [
 			validate: {
 				params: {
 					user:Joi.string().required().allow('admin','user')
+				},
+				query: {
+					deviceId: Joi.string().optional()
 				}
 			}
 		}

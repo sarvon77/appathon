@@ -10,8 +10,10 @@ pollingController.create = function(req,reply){
 		}
 	})
 }
-pollingController.list = function(req,reply){
-	pollingModel.list(req.params,function(err,succ) {
+pollingController.list = function(req,reply) {
+	var request = req.params;
+	request.deviceId = req.query.deviceId;
+	pollingModel.list(request,function(err,succ) {
 		if(err) {
 			return reply({status:400,"message":"failed"});
 		} else {
