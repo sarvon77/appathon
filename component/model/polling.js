@@ -36,12 +36,14 @@ pollingModel.ongoinglist = function(cb) {
 				var responseObj = currentRes;
 				responseObj.startDate = responseObj.startDate + " ";
 				responseObj.endDate = responseObj.endDate + " ";
-				var querystr = "SELECT * FROM polling where pollId = '" + responseObj.pollingId + "'";
-				db.query(querystr, function (error, pollingRes, fields) {
-					responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
-					var querystr = "SELECT * FROM category where pollId = '" + responseObj.pollingId + "'";
-					db.query(querystr, function (error, categoryRes, fields) {
-						responseObj.Category = categoryRes.length > 0?categoryRes:[];
+				//var querystr = "SELECT * FROM polling where pollId = '" + responseObj.pollingId + "'";
+				//db.query(querystr, function (error, pollingRes, fields) {
+					//responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
+					//var querystr = "SELECT * FROM category where pollId = '" + responseObj.pollingId + "'";
+					//db.query(querystr, function (error, categoryRes, fields) {
+						//responseObj.Category = categoryRes.length > 0?categoryRes:[];
+						responseObj.pollFor = [{"id":responseObj.pollForId,"name":responseObj.pollForName}];
+						responseObj.Category = [{"id":responseObj.categoryId,"name":responseObj.categoryName,"selected":true}];						
 						var querystr = "SELECT * FROM answer where pollId = '" + responseObj.pollingId + "'";
 						db.query(querystr, function (error, answerRes, fields) {
 							responseObj.options = answerRes.length > 0?answerRes:[];
@@ -63,8 +65,8 @@ pollingModel.ongoinglist = function(cb) {
 								//asyncCb();
 							//});
 						});
-					});
-				})
+					//});
+				//})
 			},function(err,success) {
 				cb(null,responseObjFull)
 			})
@@ -127,12 +129,15 @@ pollingModel.list = function(req,cb,listByuser) {
 				var responseObj = currentRes;				
 				responseObj.startDate = responseObj.startDate + " ";
 				responseObj.endDate = responseObj.endDate + " ";
-				var querystr = "SELECT * FROM polling where pollId = '" + responseObj.pollingId + "'";
-				db.query(querystr, function (error, pollingRes, fields) {
-					responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
-					var querystr = "SELECT * FROM category where pollId = '" + responseObj.pollingId + "'";
-					db.query(querystr, function (error, categoryRes, fields) {
-						responseObj.Category = categoryRes.length > 0?categoryRes:[];
+				//var querystr = "SELECT * FROM polling where pollId = '" + responseObj.pollingId + "'";
+				//db.query(querystr, function (error, pollingRes, fields) {
+					//responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
+					//var querystr = "SELECT * FROM category where pollId = '" + responseObj.pollingId + "'";
+					//db.query(querystr, function (error, categoryRes, fields) {
+						//responseObj.Category = categoryRes.length > 0?categoryRes:[];
+						responseObj.pollFor = [{"id":responseObj.pollForId,"name":responseObj.pollForName}];
+						responseObj.Category = [{"id":responseObj.categoryId,"name":responseObj.categoryName,"selected":true}];
+						responseObj.currentDate = moment().format();
 						var querystr = "SELECT * FROM answer where pollId = '" + responseObj.pollingId + "'";
 						db.query(querystr, function (error, answerRes, fields) {
 							responseObj.options = answerRes.length > 0?answerRes:[];
@@ -164,8 +169,8 @@ pollingModel.list = function(req,cb,listByuser) {
 								//asyncCb();
 							});
 						});
-					});
-				})
+					//});
+				//})
 			},function(err,success) {
 				cb(null,responseObjFull)
 			})
@@ -188,24 +193,29 @@ pollingModel.create = function(request,cb) {
 		generatorId = request.generatorId,	
 		friend = request.friend,	
 		optionsType = request.optionsType,	
-		pollingId = uuidV1()
-	var queryStr = "insert into pollbox(isAdmin,isApproved,charttype,optionCount,Question,photo,startDate,endDate,pollingId,deviceId,pollGenerator,generatorId,friend,optionsType) values('" + isAdmin +"','" + isApproved+"','" + charttype+"','" + optionCount+"','" + Question+"','" + photo+"','" + startDate+"','" + endDate+"','"+pollingId+"','"+deviceId+"','"+ pollGenerator+"','" + generatorId+"','"+friend+"','"+optionsType+"')";
+		pollingId = uuidV1(),
+		pollForId = request.pollFor[0].id,
+		pollForName = request.pollFor[0].name,
+		categoryId = request.Category[0].id,
+		categoryName = request.Category[0].name;
+	//var queryStr = "insert into pollbox(isAdmin,isApproved,charttype,optionCount,Question,photo,startDate,endDate,pollingId,deviceId,pollGenerator,generatorId,friend,optionsType) values('" + isAdmin +"','" + isApproved+"','" + charttype+"','" + optionCount+"','" + Question+"','" + photo+"','" + startDate+"','" + endDate+"','"+pollingId+"','"+deviceId+"','"+ pollGenerator+"','" + generatorId+"','"+friend+"','"+optionsType+"')";
+	var queryStr = "insert into pollbox(isAdmin,isApproved,charttype,optionCount,Question,photo,startDate,endDate,pollingId,deviceId,pollGenerator,generatorId,friend,optionsType,pollForId,pollForName,categoryId,categoryName) values('" + isAdmin +"','" + isApproved+"','" + charttype+"','" + optionCount+"','" + Question+"','" + photo+"','" + startDate+"','" + endDate+"','"+pollingId+"','"+deviceId+"','"+ pollGenerator+"','" + generatorId+"','"+friend+"','"+optionsType+"','"+pollForId+"','"+pollForName+"','"+categoryId+"','"+categoryName+"')";
 	db.query(queryStr, function (error, results, fields) {
 		//console.log(error,queryStr)
 		if(!error) {
-			pollingModel.pollfor(request,pollingId,function(err,succ) {
-				if(!err) {
-					pollingModel.category(request,pollingId,function(err,succ) {
-						if(!err) {
+			//pollingModel.pollfor(request,pollingId,function(err,succ) {
+				//if(!err) {
+					//pollingModel.category(request,pollingId,function(err,succ) {
+						//if(!err) {
 							pollingModel.answer(request,pollingId,function(err,succ) {
 								if(!err) {
 									cb(null,"succ")
 								}
 							})
-						}
-					})
-				}
-			})
+						//}
+					//})
+				//}
+			//})
 			
 		} else {
 			cb(error)
@@ -316,12 +326,14 @@ pollingModel.toppoll = function(request,cb) {
 				var querystr = "SELECT * FROM pollbox where isApproved = 'true' and pollingId = '" + currentRes.pollId + "'";
 				db.query(querystr, function (error, pollingResMain, fields) {
 					var responseObj = pollingResMain[0];
-					var querystr = "SELECT * FROM polling where pollId = '" + currentRes.pollId + "'";
-					db.query(querystr, function (error, pollingRes, fields) {
-						responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
-						var querystr = "SELECT * FROM category where pollId = '" + currentRes.pollId + "'";
-						db.query(querystr, function (error, categoryRes, fields) {
-							responseObj.Category = categoryRes.length > 0?categoryRes:[];
+					//var querystr = "SELECT * FROM polling where pollId = '" + currentRes.pollId + "'";
+					//db.query(querystr, function (error, pollingRes, fields) {
+						//responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
+						//var querystr = "SELECT * FROM category where pollId = '" + currentRes.pollId + "'";
+						//db.query(querystr, function (error, categoryRes, fields) {
+							//responseObj.Category = categoryRes.length > 0?categoryRes:[];
+							responseObj.pollFor = [{"id":responseObj.pollForId,"name":responseObj.pollForName}];
+							responseObj.Category = [{"id":responseObj.categoryId,"name":responseObj.categoryName,"selected":true}];						
 							var querystr = "SELECT * FROM answer where pollId = '" + currentRes.pollId + "'";
 							db.query(querystr, function (error, answerRes, fields) {
 								responseObj.options = answerRes.length > 0?answerRes:[];
@@ -343,8 +355,8 @@ pollingModel.toppoll = function(request,cb) {
 									//asyncCb();
 								//});
 							});
-						});
-					})
+						//});
+					//})
 				});
 			},function(err,success) {
 				cb(null,responseObjFull)
