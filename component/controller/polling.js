@@ -108,7 +108,7 @@ pollingController.deletepoll = function(req,reply){
 		if(err) {
 			return reply({status:400,"message":"failed"});
 		} else {
-			return reply({status:200,"message":"success"})
+			return reply({status:200,"data":"success"})
 		}
 	})
 }
