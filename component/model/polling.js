@@ -121,63 +121,108 @@ pollingModel.list = function(req,cb,listByuser) {
 			querystr = "SELECT * FROM pollbox";
 		}
 	}
-	//console.log(querystr)
-	db.query(querystr, function (error, results, fields) {
-		if(!error) {
-			var responseObjFull = [];
-			async.each(results,function(currentRes,asyncCb) {
-				var responseObj = currentRes;				
-				responseObj.startDate = responseObj.startDate + " ";
-				responseObj.endDate = responseObj.endDate + " ";
-				//var querystr = "SELECT * FROM polling where pollId = '" + responseObj.pollingId + "'";
-				//db.query(querystr, function (error, pollingRes, fields) {
-					//responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
-					//var querystr = "SELECT * FROM category where pollId = '" + responseObj.pollingId + "'";
-					//db.query(querystr, function (error, categoryRes, fields) {
-						//responseObj.Category = categoryRes.length > 0?categoryRes:[];
-						responseObj.pollFor = [{"id":responseObj.pollForId,"name":responseObj.pollForName}];
-						responseObj.Category = [{"id":responseObj.categoryId,"name":responseObj.categoryName,"selected":true}];
-						responseObj.currentDate = moment().format();
-						var querystr = "SELECT * FROM answer where pollId = '" + responseObj.pollingId + "'";
-						db.query(querystr, function (error, answerRes, fields) {
-							responseObj.options = answerRes.length > 0?answerRes:[];
-							var querystr = "SELECT * FROM user where deviceId = '" + responseObj.deviceId + "'";
-							db.query(querystr, function (error, deviceIdRes, fields) {
-								responseObj.user = deviceIdRes.length > 0?deviceIdRes:[];
-								var querystr = "SELECT * FROM comments where pollingId = '" + responseObj.pollingId + "'";
+	var deviceDetails ={};
+	var querystrDevice = "SELECT * FROM user where deviceId = '" + req.deviceId + "'";
+	db.query(querystrDevice, function (error, deviceIdRes, fields) {
+		deviceDetails = deviceIdRes.length > 0?deviceIdRes[0]:[];
+		db.query(querystr, function (error, results, fields) {
+			if(!error) {
+				var responseObjFull = [];
+				async.each(results,function(currentRes,asyncCb) {
+					var responseObj = currentRes;				
+					responseObj.startDate = responseObj.startDate + " ";
+					responseObj.endDate = responseObj.endDate + " ";
+					//var querystr = "SELECT * FROM polling where pollId = '" + responseObj.pollingId + "'";
+					//db.query(querystr, function (error, pollingRes, fields) {
+						//responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
+						//var querystr = "SELECT * FROM category where pollId = '" + responseObj.pollingId + "'";
+						//db.query(querystr, function (error, categoryRes, fields) {
+							//responseObj.Category = categoryRes.length > 0?categoryRes:[];
+							responseObj.pollFor = [{"id":responseObj.pollForId,"name":responseObj.pollForName}];
+							responseObj.Category = [{"id":responseObj.categoryId,"name":responseObj.categoryName,"selected":true}];
+							responseObj.currentDate = moment().format();
+							var querystr = "SELECT * FROM answer where pollId = '" + responseObj.pollingId + "'";
+							db.query(querystr, function (error, answerRes, fields) {
+								responseObj.options = answerRes.length > 0?answerRes:[];
+								var querystr = "SELECT * FROM user where deviceId = '" + responseObj.deviceId + "'";
 								db.query(querystr, function (error, deviceIdRes, fields) {
-									responseObj.comments = deviceIdRes.length > 0?deviceIdRes:[];
-									responseObj.commentsCount = deviceIdRes.length;
-									var querystr = "SELECT COUNT(*) as count,id,name FROM polledbox WHERE pollId = '" + responseObj.pollingId + "' GROUP BY id";
-									db.query(querystr, function (error, resultsRes, fields) {
-										responseObj.results = resultsRes.length > 0?resultsRes:[];
-										if(req.deviceId) {
-											var querystr = "SELECT * FROM polledbox WHERE pollId = '" + responseObj.pollingId + "' and deviceId='" + req.deviceId +"'";
-											db.query(querystr, function (error, votedRes, fields) {
-												responseObj.userVoted = votedRes.length > 0?true:false;
-												responseObjFull.push(responseObj)
-												asyncCb();
-											});
-										} else {
-											responseObj.userVoted = false;
-											responseObjFull.push(responseObj)
-											asyncCb();
-										}
-									});									
+									responseObj.user = deviceIdRes.length > 0?deviceIdRes:[];
+									var push = true;									
+									if(deviceDetails && deviceDetails.dob && deviceDetails.dob != "0000-00-00") {
+										//var dob = moment(responseObj.user[0].dob).format();
+										var dobCheck = false;
+										//console.log(deviceDetails,"dddd")
+										if(deviceDetails.dob && deviceDetails.dob != "0000-00-00") {
+											var deviveDob = moment(deviceDetails.dob);	
+											var curDate = moment();	
+											var yeardiff =  curDate.diff(deviveDob,"year");
+											//console.log(yeardiff)
+											//yeardiff = +yeardiff.split(" ")[0];
+											dobCheck = true;											 
+										}										
+										if(responseObj.pollForId == "p2" && deviceDetails.sex) {
+											if(deviceDetails.sex != "female") {
+												push = false
+											}
+										} else if(responseObj.pollForId == "p3" && deviceDetails.sex) {
+											if(deviceDetails.sex != "male") {
+												push = false
+											}											
+										} else if(responseObj.pollForId == "p4" && dobCheck) {
+											if(yeardiff > 18) {
+												push = false
+											}											
+										} else if(responseObj.pollForId == "p5" && dobCheck) {
+											//console.log("in")
+											if(yeardiff < 18 || yeardiff > 30) {
+												push = false
+											}
+										}										
+										//console.log(yeardiff)
+									}
+									if(push) {
+										var querystr = "SELECT * FROM comments where pollingId = '" + responseObj.pollingId + "'";
+										db.query(querystr, function (error, deviceIdRes, fields) {
+											responseObj.comments = deviceIdRes.length > 0?deviceIdRes:[];
+											responseObj.commentsCount = deviceIdRes.length;
+											var querystr = "SELECT COUNT(*) as count,id,name FROM polledbox WHERE pollId = '" + responseObj.pollingId + "' GROUP BY id";
+											db.query(querystr, function (error, resultsRes, fields) {
+												responseObj.results = resultsRes.length > 0?resultsRes:[];
+												if(req.deviceId) {
+													var querystr = "SELECT * FROM polledbox WHERE pollId = '" + responseObj.pollingId + "' and deviceId='" + req.deviceId +"'";
+													db.query(querystr, function (error, votedRes, fields) {
+														responseObj.userVoted = votedRes.length > 0?true:false;
+														responseObjFull.push(responseObj)
+														asyncCb();
+													});
+												} else {
+													responseObj.userVoted = false;
+													responseObjFull.push(responseObj)
+													asyncCb();
+												}
+											});									
+										});
+									} else {
+										asyncCb();
+									}
+										
+									//responseObjFull.push(responseObj)
+									//asyncCb();
+									//})
 								});
-								//responseObjFull.push(responseObj)
-								//asyncCb();
 							});
-						});
-					//});
-				//})
-			},function(err,success) {
-				cb(null,responseObjFull)
-			})
-		} else {
-			cb(error)
-		}
+						//});
+					//})
+				},function(err,success) {
+					cb(null,responseObjFull)
+				})
+			} else {
+				cb(error)
+			}
+		});
 	});
+	//console.log(querystr)
+	
 }
 pollingModel.create = function(request,cb) {
 	var isAdmin = request.admin,
