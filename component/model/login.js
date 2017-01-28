@@ -1,5 +1,6 @@
 var db = require("./db.js");
 const uuidV1 = require('uuid/v1');
+const moment = require('moment');
 var loginModule = {};
 
 
@@ -108,7 +109,7 @@ loginModule.registerUser = function(request,cb) {
 				isAdmin = 0,
 				deviceId = request.deviceId,
 				thumbnail = request.thumbnail,
-				dob = request.dob,
+				dob = moment(request.dob,"DD MMMM, YYYY").format("YYYY-MM-DD"),
 				nationality = request.nationality,
 				sex = request.sex,
 				phoneNumber = request.phoneNumber,
