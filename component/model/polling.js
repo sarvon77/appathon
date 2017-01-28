@@ -148,7 +148,7 @@ pollingModel.list = function(req,cb,listByuser) {
 								db.query(querystr, function (error, deviceIdRes, fields) {
 									responseObj.user = deviceIdRes.length > 0?deviceIdRes:[];
 									var push = true;									
-									if(deviceDetails && deviceDetails.dob && deviceDetails.dob != "0000-00-00" && deviceDetails.isAdmin != 0) {
+									if(deviceDetails && deviceDetails.dob && deviceDetails.dob != "0000-00-00" && deviceDetails.isAdmin == 0) {
 										//var dob = moment(responseObj.user[0].dob).format();
 										var dobCheck = false;
 										//console.log(deviceDetails,"dddd")
