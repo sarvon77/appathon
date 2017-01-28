@@ -27,8 +27,24 @@ pollingModel.comments = function(req,cb){
 }
 
 
+pollingModel.deletepoll = function(req,cb) {
+	querStr = "isDeleted = 1";
+	if(querStr != "") {
+		var queryStr = "update pollbox set " + querStr + " where pollingId='"+req.pollId+"'";
+		db.query(queryStr, function (error, results, fields) {
+			//console.log(error,queryStr)
+			if(!error) {
+				cb(null,"success")
+			} else {
+				cb(error)
+			}
+		})
+	} else {
+		cb(error);
+	}
+}
 pollingModel.ongoinglist = function(cb) {
-	var querystr = "SELECT * FROM pollbox WHERE startDate <= CURDATE() AND  endDate >= CURDATE() and isApproved = 'true' and isStarted='true'";
+	var querystr = "SELECT * FROM pollbox WHERE startDate <= CURDATE() AND  endDate >= CURDATE() and isApproved = 'true' and isStarted='true' and isDeleted = 0";
 	db.query(querystr, function (error, results, fields) {
 		if(!error) {
 			var responseObjFull = [];
@@ -112,13 +128,13 @@ pollingModel.list = function(req,cb,listByuser) {
 	console.log(req);
 	var querystr = "";
 	if(listByuser == "single") {
-		querystr = "SELECT * FROM pollbox where pollingId = '" + req.pollId + "'";
+		querystr = "SELECT * FROM pollbox where pollingId = '" + req.pollId + "' and isDeleted = 0";
 	} else if(listByuser == "list"){
-		querystr = "SELECT * FROM pollbox where generatorId = '" + req.userId + "'";
+		querystr = "SELECT * FROM pollbox where generatorId = '" + req.userId + "' and isDeleted = 0";
 	} else {
-		querystr = "SELECT * FROM pollbox where isApproved = 'true'";
+		querystr = "SELECT * FROM pollbox where isApproved = 'true' and isDeleted = 0";
 		if(req.user == "admin") {
-			querystr = "SELECT * FROM pollbox";
+			querystr = "SELECT * FROM pollbox where isDeleted = 0";
 		}
 	}
 	var deviceDetails ={};
@@ -368,7 +384,7 @@ pollingModel.toppoll = function(request,cb) {
 		if(!error) {
 			var responseObjFull = [];
 			async.each(results,function(currentRes,asyncCb) {
-				var querystr = "SELECT * FROM pollbox where isApproved = 'true' and pollingId = '" + currentRes.pollId + "'";
+				var querystr = "SELECT * FROM pollbox where isApproved = 'true' and pollingId = '" + currentRes.pollId + "' and isDeleted = 0";
 				db.query(querystr, function (error, pollingResMain, fields) {
 					var responseObj = pollingResMain[0];
 					//var querystr = "SELECT * FROM polling where pollId = '" + currentRes.pollId + "'";

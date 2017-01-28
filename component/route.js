@@ -61,6 +61,21 @@ var route = [
 		}
 	},
 	{
+		method: 'DELETE',
+		path:'/delete-poll/{pollId}',
+		config: {		
+			handler:polling.deletepoll,
+			description: 'login User',
+			notes: 'login',
+			tags: ['api'],
+			validate: {
+				params: {
+					pollId:Joi.string().required()
+				}
+			}
+		}
+	},
+	{
 		method: 'get',
 		path:'/list-poll/{user}',
 		config: {		

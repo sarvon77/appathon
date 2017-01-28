@@ -103,4 +103,16 @@ pollingController.comments = function(req,reply){
 	})
 }
 
+pollingController.deletepoll = function(req,reply){
+	pollingModel.deletepoll(req.params,function(err,succ) {
+		if(err) {
+			return reply({status:400,"message":"failed"});
+		} else {
+			return reply({status:200,"message":"success"})
+		}
+	})
+}
+
+
+
 module.exports = pollingController
