@@ -6,11 +6,11 @@ var config = {
 			callbackURL: "http://localhost:3000/facebook-callback"
 	  }
 	},
-	"db": process.env.PORT ? {
+	"db": process.env.PORT || true? {
 	  host     : 'sql6.freemysqlhosting.net',
-	  user     : 'sql6154934',
-	  password : 'IGuRqBJvyV',
-	  database : 'sql6154934'
+	  user     : 'sql6155984',
+	  password : 'rN2U2glarH',
+	  database : 'sql6155984'
 	} : {
 		host     : 'localhost',
 		user     : 'root',
