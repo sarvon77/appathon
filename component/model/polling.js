@@ -386,38 +386,43 @@ pollingModel.toppoll = function(request,cb) {
 			async.each(results,function(currentRes,asyncCb) {
 				var querystr = "SELECT * FROM pollbox where isApproved = 'true' and pollingId = '" + currentRes.pollId + "' and isDeleted = 0";
 				db.query(querystr, function (error, pollingResMain, fields) {
-					var responseObj = pollingResMain[0];
-					//var querystr = "SELECT * FROM polling where pollId = '" + currentRes.pollId + "'";
-					//db.query(querystr, function (error, pollingRes, fields) {
-						//responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
-						//var querystr = "SELECT * FROM category where pollId = '" + currentRes.pollId + "'";
-						//db.query(querystr, function (error, categoryRes, fields) {
-							//responseObj.Category = categoryRes.length > 0?categoryRes:[];
-							responseObj.pollFor = [{"id":responseObj.pollForId,"name":responseObj.pollForName}];
-							responseObj.Category = [{"id":responseObj.categoryId,"name":responseObj.categoryName,"selected":true}];						
-							var querystr = "SELECT * FROM answer where pollId = '" + currentRes.pollId + "'";
-							db.query(querystr, function (error, answerRes, fields) {
-								responseObj.options = answerRes.length > 0?answerRes:[];
-								//var querystr = "SELECT * FROM user where deviceId = '" + currentRes.deviceId + "'";
-								//db.query(querystr, function (error, deviceIdRes, fields) {
-									//responseObj.user = deviceIdRes.length > 0?deviceIdRes:[];
-									var querystr = "SELECT * FROM comments where pollingId = '" + currentRes.pollId + "'";
-									db.query(querystr, function (error, deviceIdRes, fields) {
-										responseObj.comments = deviceIdRes.length > 0?deviceIdRes:[];
-										responseObj.commentsCount = deviceIdRes.length;
-										var querystr = "SELECT COUNT(*) as count,id,name FROM polledbox WHERE pollId = '" + currentRes.pollId + "' GROUP BY id";
-										db.query(querystr, function (error, resultsRes, fields) {
-											responseObj.results = resultsRes.length > 0?resultsRes:[];
-											responseObjFull.push(responseObj)
-											asyncCb();
-										});									
-									});
-									//responseObjFull.push(responseObj)
-									//asyncCb();
-								//});
-							});
-						//});
-					//})
+					if(pollingResMain.length > 0) {
+						var responseObj = pollingResMain[0];
+						//var querystr = "SELECT * FROM polling where pollId = '" + currentRes.pollId + "'";
+						//db.query(querystr, function (error, pollingRes, fields) {
+							//responseObj.pollFor = pollingRes.length > 0?pollingRes:[];
+							//var querystr = "SELECT * FROM category where pollId = '" + currentRes.pollId + "'";
+							//db.query(querystr, function (error, categoryRes, fields) {
+								//responseObj.Category = categoryRes.length > 0?categoryRes:[];
+								responseObj.pollFor = [{"id":responseObj.pollForId,"name":responseObj.pollForName}];
+								responseObj.Category = [{"id":responseObj.categoryId,"name":responseObj.categoryName,"selected":true}];						
+								var querystr = "SELECT * FROM answer where pollId = '" + currentRes.pollId + "'";
+								db.query(querystr, function (error, answerRes, fields) {
+									responseObj.options = answerRes.length > 0?answerRes:[];
+									//var querystr = "SELECT * FROM user where deviceId = '" + currentRes.deviceId + "'";
+									//db.query(querystr, function (error, deviceIdRes, fields) {
+										//responseObj.user = deviceIdRes.length > 0?deviceIdRes:[];
+										var querystr = "SELECT * FROM comments where pollingId = '" + currentRes.pollId + "'";
+										db.query(querystr, function (error, deviceIdRes, fields) {
+											responseObj.comments = deviceIdRes.length > 0?deviceIdRes:[];
+											responseObj.commentsCount = deviceIdRes.length;
+											var querystr = "SELECT COUNT(*) as count,id,name FROM polledbox WHERE pollId = '" + currentRes.pollId + "' GROUP BY id";
+											db.query(querystr, function (error, resultsRes, fields) {
+												responseObj.results = resultsRes.length > 0?resultsRes:[];
+												responseObjFull.push(responseObj)
+												asyncCb();
+											});									
+										});
+										//responseObjFull.push(responseObj)
+										//asyncCb();
+									//});
+								});
+							//});
+						//})
+					} else {
+						asyncCb();
+					}
+					
 				});
 			},function(err,success) {
 				cb(null,responseObjFull)
