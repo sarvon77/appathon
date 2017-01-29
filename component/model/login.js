@@ -85,7 +85,7 @@ loginModule.loginUser = function(request,cb) {
 		  cb({msg:error})
 	  } else {		 
 		 if(results.length > 0) {
-			 results[0].isAdmin = results[0].isAdmin == 0 ? false : true;
+			 //results[0].isAdmin = results[0].isAdmin == 0 ? false : true;
 			 cb(null,results[0]);
 		 } else {
 			 cb({msg:"no record found"});
@@ -125,7 +125,7 @@ loginModule.registerUser = function(request,cb) {
 				} else {
 					var selQuery = "select * from user where Id = '" + results.insertId+ "'";
 					db.query(selQuery, function (error, results,row) {			
-						results[0].isAdmin = results[0].isAdmin == 0 ? false : true;
+						//results[0].isAdmin = results[0].isAdmin == 0 ? false : true;
 					//console.log(error || results)					
 						cb(null,results[0] || "success")
 					});
