@@ -7,10 +7,10 @@ var config = {
 	  }
 	},
 	"db": process.env.PORT || true ? {
-	  host     : 'sql6.freemysqlhosting.net',
-	  user     : 'sql6155984',
-	  password : 'rN2U2glarH',
-	  database : 'sql6155984'
+	  host     : 'sql8.freemysqlhosting.net',
+	  user     : 'sql8159158',
+	  password : 'zI7jzHUIRb',
+	  database : 'sql8159158'
 	} : {
 		host     : 'localhost',
 		user     : 'root',
@@ -20,9 +20,9 @@ var config = {
 };
 /*
 "db": {
-	  host     : 'sql6.freemysqlhosting.net',
-	  user     : 'sql6154934',
-	  password : 'IGuRqBJvyV',
-	  database : 'sql6154934'
+	  host     : 'sql8.freemysqlhosting.net',
+	  user     : 'sql8159158',
+	  password : 'zI7jzHUIRb',
+	  database : 'sql8159158'
 }*/
 module.exports = config;
